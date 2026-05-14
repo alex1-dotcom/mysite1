@@ -138,7 +138,7 @@ export default function QuestionModal({ isOpen, onClose, lesson }: QuestionModal
                             type="text"
                             value={currentUser.name}
                             readOnly
-                            className="input-field opacity-60 cursor-default"
+                            className="input-field opacity-60 cursor-default text-center"
                           />
                         </div>
                         <div>
@@ -147,7 +147,7 @@ export default function QuestionModal({ isOpen, onClose, lesson }: QuestionModal
                             type="email"
                             value={currentUser.email}
                             readOnly
-                            className="input-field opacity-60 cursor-default"
+                            className="input-field opacity-60 cursor-default text-center"
                           />
                         </div>
                       </div>

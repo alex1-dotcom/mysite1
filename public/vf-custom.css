@@ -1,0 +1,25 @@
+.vfrc-avatar {
+  display: none !important;
+}
+
+.vfrc-image {
+  display: none !important;
+}
+
+img[src*="1778748269830-gemini_generated_image"],
+div:has(> img[src*="1778748269830-gemini_generated_image"]) {
+  display: none !important;
+}
+
+.vfrc-voice__avatar-image,
+.vfrc-voice__avatar {
+  display: none !important;
+}
+
+.vfrc-voice__button {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: unset !important;
+  border-radius: 50% !important;
+  padding: 0 !important;
+}

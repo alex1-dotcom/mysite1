@@ -176,14 +176,8 @@ export default function Sidebar({
         </div>
 
         {/* User chip */}
-        <div className="px-4 py-4 border-t border-border-subtle flex-shrink-0 safe-bottom">
+        <div className="pl-[80px] pr-4 py-4 border-t border-border-subtle flex-shrink-0 safe-bottom">
           <div className="flex items-center gap-3">
-            <div
-              className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
-              style={{ background: "linear-gradient(135deg,#4f8ef7,#7c6af5)" }}
-            >
-              {currentUser.avatarInitials}
-            </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs font-semibold text-white truncate">{currentUser.name}</p>
               <p className="text-[10px] text-white/35 truncate">{currentUser.email}</p>
