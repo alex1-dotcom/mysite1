@@ -1,0 +1,48 @@
+{
+  "course": {
+    "title": "Listen. Align. Shine.",
+    "logo": "AVL"
+  },
+  "lessons": [
+    {
+      "id": 1,
+      "url": "https://www.youtube.com/watch?v=ZY0Mdss7dWY&list=RDZY0Mdss7dWY&start_radio=1",
+      "description": "Master dark-mode palettes, accent color psychology, and semantic color systems that scale."
+    },
+    {
+      "id": 2,
+      "url": "https://www.youtube.com/watch?v=hhgikMDCp08&list=RDZY0Mdss7dWY&index=3",
+      "description": "Fluid type scales, variable fonts, and why Inter/Geist became the industry standard."
+    },
+    {
+      "id": 3,
+      "url": "https://www.youtube.com/watch?v=QUE9-FPFXqM&list=RDZY0Mdss7dWY&index=3",
+      "description": "Fluid Inter/Geist became the industry standard."
+    },
+    {
+      "id": 4,
+      "url": "https://www.youtube.com/watch?v=7XO6LQ7fy-w&list=RDZY0Mdss7dWY&index=5",
+      "description": "Fluid type scales, variable fonts, and why Inter/Geist became the industry standard."
+    },
+    {
+      "id": 5,
+      "url": "https://www.youtube.com/watch?v=MB14ChkYAEo&list=RDZY0Mdss7dWY&index=7",
+      "description": "Fluid type scales, variable fonts, and why Inter/Geist became the industry standard."
+    },
+    {
+      "id": 6,
+      "url": "https://www.youtube.com/watch?v=lk6lMKXFi_M&list=RDZY0Mdss7dWY&index=9",
+      "description": "Fluid type scales, variable fonts, and why Inter/Geist became the industry standard."
+    },
+    {
+      "id": 7,
+      "url": "https://www.youtube.com/watch?v=CsG9m4amhXQ&list=RDZY0Mdss7dWY&index=16",
+      "description": "Fluid type scales, variable fonts, and why Inter/Geist became the industry standard."
+    },
+    {
+      "id": 8,
+      "url": "https://www.youtube.com/watch?v=m0R9vGVU0PY&list=RDm0R9vGVU0PY&start_radio=1",
+      "description": "Fluid type scales, variable fonts, and why Inter/Geist became the industry standard."
+    }
+  ]
+}
