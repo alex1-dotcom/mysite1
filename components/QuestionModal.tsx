@@ -111,7 +111,7 @@ export default function QuestionModal({ isOpen, onClose, lesson }: QuestionModal
                       </div>
                       <h4 className="text-base font-semibold text-white mb-1">Question Sent!</h4>
                       <p className="text-sm text-white/45 max-w-xs">
-                        The instructor will reply in your inbox. You'll see it in the <strong className="text-white/60">My Inbox</strong> tab.
+                        The instructor will reply in your inbox. You&apos;ll see it in the <strong className="text-white/60">My Inbox</strong> tab.
                       </p>
                       <button
                         onClick={onClose}

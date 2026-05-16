@@ -91,7 +91,7 @@ export default function VideoPlayer({ lesson, onAskQuestion }: VideoPlayerProps)
               <div className="flex items-center gap-2 flex-shrink-0 self-start">
                 <button
                   onClick={onAskQuestion}
-                  className="btn-primary"
+                  className="btn-primary hidden sm:inline-flex"
                 >
                   <Mail size={14} />
                   Ask
