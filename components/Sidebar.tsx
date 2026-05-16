@@ -1,6 +1,6 @@
 "use client";
 
-import { Lesson, Message, currentUser, messages } from "@/data/course";
+import { Lesson, Message, messages } from "@/data/course";
 import { CheckCircle2, PlayCircle, BookOpen, Inbox } from "lucide-react";
 import { motion } from "framer-motion";
 import { truncate, clip } from "@/lib/truncate";
@@ -179,7 +179,7 @@ export default function Sidebar({
           )}
         </div>
 
-        {/* User chip */}
+        {/* User chip — temporarily hidden
         <div className="pl-[80px] pr-4 py-4 border-t border-border-subtle flex-shrink-0 safe-bottom">
           <div className="flex items-center gap-3">
             <div className="flex-1 min-w-0">
@@ -188,6 +188,7 @@ export default function Sidebar({
             </div>
           </div>
         </div>
+        */}
       </aside>
     </>
   );

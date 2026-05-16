@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { X, Mail, Send, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lesson, currentUser } from "@/data/course";
+import { Lesson } from "@/data/course";
 
 interface QuestionModalProps {
   isOpen: boolean;
@@ -130,7 +130,7 @@ export default function QuestionModal({ isOpen, onClose, lesson }: QuestionModal
                       onSubmit={handleSubmit}
                       className="space-y-4"
                     >
-                      {/* User info (read-only) */}
+                      {/* User info (read-only) — temporarily hidden
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                           <label className="block text-xs text-white/40 font-medium mb-1.5">Name</label>
@@ -151,6 +151,7 @@ export default function QuestionModal({ isOpen, onClose, lesson }: QuestionModal
                           />
                         </div>
                       </div>
+                      */}
 
                       {/* Question */}
                       <div>

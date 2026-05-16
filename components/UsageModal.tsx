@@ -1,11 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, Zap, DollarSign, AlertCircle, Loader2 } from "lucide-react";
+import { X, Zap, AlertCircle, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const BUDGET_USD = Number(process.env.NEXT_PUBLIC_CREDIT_BUDGET_USD ?? 60);
-const RATE_PER_CREDIT = Number(process.env.NEXT_PUBLIC_CREDIT_RATE ?? 0.00403);
+const RATE_PER_CREDIT = 0.00403;
 
 interface UsageItem {
   period: string;
@@ -19,6 +18,8 @@ interface UsageData {
     cursor?: number;
     items: UsageItem[];
   };
+  spent: number;
+  limit: number | null;
 }
 
 interface UsageModalProps {
@@ -69,8 +70,10 @@ export default function UsageModal({ isOpen, onClose }: UsageModalProps) {
 
   const items = data?.result?.items ?? [];
   const totalCredits = items.reduce((s, i) => s + i.count, 0);
-  const moneySpent = totalCredits * RATE_PER_CREDIT;
-  const pct = Math.min((moneySpent / BUDGET_USD) * 100, 100);
+  const moneySpent = data?.spent ?? totalCredits * RATE_PER_CREDIT;
+  const limit = data?.limit ?? null;
+  const creditsLeft = limit !== null ? limit - moneySpent : null;
+  const pct = limit ? Math.min((moneySpent / limit) * 100, 100) : 0;
   const days = groupByDay(items);
   const maxCount = Math.max(...days.map((d) => d.count), 1);
 
@@ -117,7 +120,7 @@ export default function UsageModal({ isOpen, onClose }: UsageModalProps) {
                   </div>
                   <div>
                     <h3 className="text-sm font-semibold text-white">Credit Usage</h3>
-                    <p className="text-xs text-white/40 mt-0.5">Voiceflow project consumption</p>
+                    <p className="text-xs text-white/40 mt-0.5">Conversation usage</p>
                   </div>
                 </div>
                 <button
@@ -160,16 +163,18 @@ export default function UsageModal({ isOpen, onClose }: UsageModalProps) {
                       <div className="flex items-start justify-between mb-3">
                         <div>
                           <p className="text-[10px] text-white/40 uppercase tracking-widest font-medium">
-                            Money Spent
+                            Budget Used
                           </p>
                           <p className="text-3xl font-bold text-white mt-0.5">
-                            ${moneySpent.toFixed(2)}
-                            <span className="text-base font-normal text-white/30 ml-1">
-                              / ${BUDGET_USD.toFixed(2)}
-                            </span>
+                            {pct.toFixed(1)}%
                           </p>
+                          {creditsLeft !== null && (
+                            <p className="text-xs mt-1" style={{ color: creditsLeft < 0 ? "#ef4444" : "#4ade80" }}>
+                              {Math.max(0, 100 - pct).toFixed(1)}% remaining
+                            </p>
+                          )}
                         </div>
-                        <DollarSign size={28} style={{ color: "#7c6af5", opacity: 0.5 }} />
+                        <span className="text-2xl font-bold" style={{ color: "#7c6af5", opacity: 0.5 }}>%</span>
                       </div>
 
                       {/* Budget progress bar */}
@@ -203,7 +208,8 @@ export default function UsageModal({ isOpen, onClose }: UsageModalProps) {
                         </p>
                         <div className="space-y-2">
                           {days.map(({ date, count }) => {
-                            const dayCost = count * RATE_PER_CREDIT;
+                            const daySpent = count * RATE_PER_CREDIT;
+                            const dayPct = limit ? Math.min((daySpent / limit) * 100, 100) : 0;
                             return (
                               <div key={date} className="flex items-center gap-3">
                                 <span className="text-[10px] text-white/40 w-20 flex-shrink-0">
@@ -219,7 +225,7 @@ export default function UsageModal({ isOpen, onClose }: UsageModalProps) {
                                   />
                                 </div>
                                 <span className="text-[10px] text-white/60 w-16 text-right flex-shrink-0">
-                                  ${dayCost.toFixed(2)}
+                                  {limit ? `${dayPct.toFixed(2)}%` : `${count} cr`}
                                 </span>
                               </div>
                             );
