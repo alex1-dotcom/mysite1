@@ -2,18 +2,27 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Menu, X, ChevronRight } from "lucide-react";
-import { lessons, messages, courseInfo } from "@/data/course";
+import { Menu, ChevronRight, Loader2 } from "lucide-react";
+import { messages } from "@/data/course";
+import { truncate } from "@/lib/truncate";
+import { useSyllabus } from "@/hooks/useSyllabus";
 import Sidebar from "@/components/Sidebar";
 import VideoPlayer from "@/components/VideoPlayer";
 import QuestionModal from "@/components/QuestionModal";
 
 export default function CoursePage() {
-  const [activeLessonId, setActiveLessonId] = useState(lessons[0].id);
+  const { lessons, courseTitle, courseLogo, loading, error } = useSyllabus();
+  const [activeLessonId, setActiveLessonId] = useState<string>("");
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"lessons" | "inbox">("lessons");
+
+  useEffect(() => {
+    if (lessons.length > 0 && !activeLessonId) {
+      setActiveLessonId(lessons[0].id);
+    }
+  }, [lessons, activeLessonId]);
 
   const activeLesson = lessons.find((l) => l.id === activeLessonId) ?? lessons[0];
   const repliedCount = messages.filter((m) => m.adminReply).length;
@@ -22,7 +31,7 @@ export default function CoursePage() {
     setActiveLessonId(id);
     setCompletedIds((prev) => {
       const next = new Set(prev);
-      next.add(activeLessonId);
+      if (activeLessonId) next.add(activeLessonId);
       return next;
     });
   };
@@ -31,10 +40,32 @@ export default function CoursePage() {
     setSidebarOpen(false);
   }, [activeLessonId]);
 
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-bg-primary">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 size={28} className="text-accent-blue animate-spin" style={{ color: "#4f8ef7" }} />
+          <p className="text-sm text-white/40">Loading syllabus…</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !activeLesson) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-bg-primary">
+        <p className="text-sm text-red-400">{error ?? "No lessons found."}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen overflow-hidden bg-bg-primary">
       {/* ---- Sidebar ---- */}
       <Sidebar
+        lessons={lessons}
+        courseTitle={courseTitle}
+        courseLogo={courseLogo}
         activeId={activeLessonId}
         completedIds={completedIds}
         onSelect={handleSelectLesson}
@@ -70,15 +101,11 @@ export default function CoursePage() {
         {/* Desktop top bar */}
         <header className="hidden lg:flex items-center justify-between px-8 h-14 border-b border-border-subtle flex-shrink-0">
           <div className="flex items-center gap-2 text-xs text-white/35">
-            <span>{courseInfo.title}</span>
+            <span>{truncate(courseTitle, 40)}</span>
             <ChevronRight size={12} />
             <span className="text-white/60">Part {activeLesson.part}</span>
             <ChevronRight size={12} />
-            <span className="text-white/80 font-medium">{activeLesson.title}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            <span className="text-xs text-white/40">Live Session</span>
+            <span className="text-white/80 font-medium">{truncate(activeLesson.title, 40)}</span>
           </div>
         </header>
 
@@ -97,7 +124,7 @@ export default function CoursePage() {
               />
             </motion.div>
 
-            {/* Navigation chips below video */}
+            {/* Navigation chips */}
             {(() => {
               const hasPrev = activeLesson.part > 1;
               const hasNext = activeLesson.part < lessons.length;

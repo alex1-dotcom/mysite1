@@ -1,10 +1,14 @@
 "use client";
 
-import { lessons, currentUser } from "@/data/course";
+import { Lesson, Message, currentUser, messages } from "@/data/course";
 import { CheckCircle2, PlayCircle, BookOpen, Inbox } from "lucide-react";
 import { motion } from "framer-motion";
+import { truncate, clip } from "@/lib/truncate";
 
 interface SidebarProps {
+  lessons: Lesson[];
+  courseTitle: string;
+  courseLogo: string;
   activeId: string;
   completedIds: Set<string>;
   onSelect: (id: string) => void;
@@ -16,6 +20,9 @@ interface SidebarProps {
 }
 
 export default function Sidebar({
+  lessons,
+  courseTitle,
+  courseLogo,
   activeId,
   completedIds,
   onSelect,
@@ -25,7 +32,9 @@ export default function Sidebar({
   isOpen,
   onClose,
 }: SidebarProps) {
-  const progress = Math.round((completedIds.size / lessons.length) * 100);
+  const progress = lessons.length
+    ? Math.round((completedIds.size / lessons.length) * 100)
+    : 0;
 
   return (
     <>
@@ -53,11 +62,11 @@ export default function Sidebar({
               className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-white"
               style={{ background: "linear-gradient(135deg,#4f8ef7,#7c6af5)" }}
             >
-              UI
+              {clip(courseLogo, 3)}
             </div>
             <div>
               <p className="text-xs text-white/40 font-medium tracking-widest uppercase">Course</p>
-              <h2 className="text-sm font-semibold text-white leading-tight">Modern UI/UX Design</h2>
+              <h2 className="text-sm font-semibold text-white leading-tight">{truncate(courseTitle, 28)}</h2>
             </div>
           </div>
 
@@ -136,12 +145,9 @@ export default function Sidebar({
                           : "hover:bg-white/[0.04]"
                       }`}
                     >
-                      {/* Active glow indicator */}
                       {isActive && (
                         <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-full bg-accent-blue animate-pulse_glow" />
                       )}
-
-                      {/* Icon */}
                       <span className="mt-0.5 flex-shrink-0">
                         {isDone ? (
                           <CheckCircle2 size={16} className="text-accent-blue" />
@@ -153,8 +159,6 @@ export default function Sidebar({
                           </span>
                         )}
                       </span>
-
-                      {/* Text */}
                       <span className="flex-1 min-w-0">
                         <span
                           className={`block text-xs font-semibold leading-snug truncate ${
@@ -171,7 +175,7 @@ export default function Sidebar({
               })}
             </ul>
           ) : (
-            <InboxTab />
+            <InboxTab lessons={lessons} />
           )}
         </div>
 
@@ -189,10 +193,7 @@ export default function Sidebar({
   );
 }
 
-function InboxTab() {
-  const { messages } = require("@/data/course");
-  const { lessons } = require("@/data/course");
-
+function InboxTab({ lessons }: { lessons: Lesson[] }) {
   if (messages.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-40 text-center px-6">
@@ -205,8 +206,8 @@ function InboxTab() {
 
   return (
     <div className="px-3 py-2 space-y-3">
-      {messages.map((msg: any) => {
-        const lesson = lessons.find((l: any) => l.id === msg.lessonId);
+      {messages.map((msg: Message) => {
+        const lesson = lessons.find((l) => l.id === msg.lessonId);
         return (
           <motion.div
             key={msg.id}
@@ -217,7 +218,6 @@ function InboxTab() {
             <p className="text-[10px] text-white/35 font-medium">
               Part {lesson?.part} — {lesson?.title}
             </p>
-            {/* User question */}
             <div className="flex justify-end">
               <div
                 className="rounded-xl rounded-tr-sm px-3 py-2 text-xs text-white/85 max-w-[85%]"
@@ -226,7 +226,6 @@ function InboxTab() {
                 {msg.question}
               </div>
             </div>
-            {/* Admin reply */}
             {msg.adminReply ? (
               <div className="flex justify-start">
                 <div className="rounded-xl rounded-tl-sm px-3 py-2 text-xs text-white/80 max-w-[85%] bg-white/[0.06] border border-white/10">

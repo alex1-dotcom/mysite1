@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Maximize2, Minimize2, Mail } from "lucide-react";
+import { Maximize2, Minimize2, Mail, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Lesson } from "@/data/course";
+import { truncate } from "@/lib/truncate";
+import UsageModal from "@/components/UsageModal";
 
 interface VideoPlayerProps {
   lesson: Lesson;
@@ -12,12 +14,14 @@ interface VideoPlayerProps {
 
 export default function VideoPlayer({ lesson, onAskQuestion }: VideoPlayerProps) {
   const [cinemaMode, setCinemaMode] = useState(false);
+  const [usageOpen, setUsageOpen] = useState(false);
 
   const embedUrl = lesson.youtubeUrl.includes("embed")
     ? lesson.youtubeUrl
     : lesson.youtubeUrl.replace("watch?v=", "embed/");
 
   return (
+    <>
     <AnimatePresence mode="wait">
       {cinemaMode ? (
         <motion.div
@@ -31,7 +35,7 @@ export default function VideoPlayer({ lesson, onAskQuestion }: VideoPlayerProps)
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-4 sm:px-6 py-3 bg-gradient-to-b from-black/90 to-transparent absolute top-0 inset-x-0 z-10">
             <div className="min-w-0">
               <p className="text-xs text-white/40 uppercase tracking-widest font-medium">Now Playing</p>
-              <h2 className="text-sm font-semibold text-white truncate">{lesson.title}</h2>
+              <h2 className="text-sm font-semibold text-white truncate">{truncate(lesson.title, 55)}</h2>
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
               <button
@@ -81,8 +85,8 @@ export default function VideoPlayer({ lesson, onAskQuestion }: VideoPlayerProps)
                   </span>
                   <span className="text-xs text-white/30">{lesson.duration}</span>
                 </div>
-                <h1 className="text-xl font-bold text-white leading-snug">{lesson.title}</h1>
-                <p className="text-sm text-white/50 mt-1 leading-relaxed">{lesson.description}</p>
+                <h1 className="text-xl font-bold text-white leading-snug">{truncate(lesson.title, 55)}</h1>
+                <p className="text-sm text-white/50 mt-1 leading-relaxed">{truncate(lesson.description, 140)}</p>
               </div>
               <div className="flex items-center gap-2 flex-shrink-0 self-start">
                 <button
@@ -91,6 +95,14 @@ export default function VideoPlayer({ lesson, onAskQuestion }: VideoPlayerProps)
                 >
                   <Mail size={14} />
                   Ask
+                </button>
+                <button
+                  onClick={() => setUsageOpen(true)}
+                  title="Credit Usage"
+                  className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-white/60 hover:text-white hover:bg-white/[0.06] border border-white/10 transition-all"
+                >
+                  <Zap size={14} />
+                  <span className="hidden sm:inline">Usage</span>
                 </button>
                 <button
                   onClick={() => setCinemaMode(true)}
@@ -116,5 +128,8 @@ export default function VideoPlayer({ lesson, onAskQuestion }: VideoPlayerProps)
         </motion.div>
       )}
     </AnimatePresence>
+
+    <UsageModal isOpen={usageOpen} onClose={() => setUsageOpen(false)} />
+    </>
   );
 }
